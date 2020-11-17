@@ -1,7 +1,16 @@
 const express = require("express")
 const app = express() //atribuimos as funções a variável
+app.use(express.json())
+
+//query params(parâmetros get => filtrar, listar as informações)
+//route params(identificar recursos => atualiza e deleta)
+//request body()
 
 app.get("/projeto", (request, response) => {
+    const {title, dev} = request.query
+    console.log(title)
+    console.log(dev)
+
     return response.json([
         "Projeto 1", 
         "Projeto 2"
@@ -9,6 +18,9 @@ app.get("/projeto", (request, response) => {
 })
 
 app.post('/projeto', (request, response) =>{
+    const body = request.body
+    console.log(body)
+
     return response.json([
         "Projeto 1",
         "Projeto 2",
@@ -17,6 +29,8 @@ app.post('/projeto', (request, response) =>{
 })
 
 app.put('/projeto/:id', (request, response) =>{
+    const params = request.params
+    console.log(params)
     return response.json([
         "Projeto 4",
         "Projeto 3",
