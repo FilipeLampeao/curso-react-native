@@ -1,48 +1,53 @@
 const express = require("express")
 const app = express() //atribuimos as funções a variável
-app.use(express.json())
+const {uuid} = require("uuidv4")
 
+app.use(express.json())
 //query params(parâmetros get => filtrar, listar as informações)
 //route params(identificar recursos => atualiza e deleta)
 //request body()
 
-app.get("/projeto", (request, response) => {
-    const {title, dev} = request.query
-    console.log(title)
-    console.log(dev)
+const projetos = []
 
-    return response.json([
-        "Projeto 1", 
-        "Projeto 2"
-    ])
+app.get("/projeto", (request, response) => {
+    const {title} = request.query
+    const resultados = title ? projetos.filter(projeto => projeto.title.includes(title)): projetos
+    return response.json(resultados)
 })
 
 app.post('/projeto', (request, response) =>{
-    const body = request.body
-    console.log(body)
-
-    return response.json([
-        "Projeto 1",
-        "Projeto 2",
-        "Projeto 3"
-    ])
+    const {title, dev} = request.body
+    const projeto = {id: uuid(), title, dev}
+    projetos.push(projeto)
+    return response.json(projeto)
 })
 
 app.put('/projeto/:id', (request, response) =>{
-    const params = request.params
-    console.log(params)
-    return response.json([
-        "Projeto 4",
-        "Projeto 3",
-        "Projeto 2"
-    ])//http://localhost:3333/projeto/4
+    const {id} = request.params
+    const {title, dev} = request.body
+    const projectIndex = projetos.findIndex(project => project.id == id)
+    if(projectIndex < 0){
+        return response.status(400).json({error: "Projeto não encontrado"})
+    }
+    const projeto = {
+        id,
+        title,
+        dev
+    }
+    projetos[projectIndex] = projeto
+
+    return response.json(projeto)
+    //http://localhost:3333/projeto/4
 })
 
 app.delete('/projeto/:id', (request, response) =>{
-    return response.json([
-        "Projeto 3",
-        "Projeto 2"
-    ])
+    const {id} = request.params
+    const projectIndex = projetos.findIndex(project => project.id == id)
+    if(projectIndex < 0){
+        return response.status(400).json({error: "Projeto não encontrado"})
+    }
+    projetos.splice(projectIndex, 1)
+    return response.status(204).send()
 })
 
 app.listen(3333, () =>{
