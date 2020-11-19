@@ -1,9 +1,10 @@
-
+import React from 'react'
+import Header from './Components/Header'
 
 function App() {
   return (
-    <h1>tha's why u are in the same place</h1>
-  );
+    <Header></Header>
+  )
 }
 
 export default App;
