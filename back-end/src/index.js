@@ -1,7 +1,9 @@
 const express = require("express")
+const cors = require("cors")
 const app = express() //atribuimos as funções a variável
 const {uuid} = require("uuidv4")
 
+app.use(cors())
 app.use(express.json())
 //query params(parâmetros get => filtrar, listar as informações)
 //route params(identificar recursos => atualiza e deleta)
